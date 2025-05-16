@@ -3,18 +3,18 @@ import 'package:cars_simulation/canvas_element_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
-
 class Car extends StatefulWidget {
   const Car({
     super.key,
     required this.carController,
     required this.color,
+    required this.codeName, // parámetro obligatorio agregado
     this.size = 30,
   });
 
   final CanvasElementController carController;
   final Color color;
+  final String codeName; // nuevo parámetro
   final double size;
 
   @override
@@ -39,11 +39,11 @@ class _CarState extends State<Car> {
 
     _randomizeDirection();
 
-    widget.carController.getPosition=(){
+    widget.carController.getPosition = () {
       return Offset(xpos, ypos);
     };
 
-    widget.carController.getSize=(){
+    widget.carController.getSize = () {
       return Size(widget.size, widget.size);
     };
 
@@ -55,12 +55,10 @@ class _CarState extends State<Car> {
           _randomizeDirection();
         }
 
-        // Movimiento
         double radians = angleDeg * (pi / 180);
         xpos += cos(radians) * velocity;
         ypos += sin(radians) * velocity;
 
-        // Rebotes
         bool rebounded = false;
 
         if (xpos + widget.size > maxWidth) {
@@ -92,8 +90,8 @@ class _CarState extends State<Car> {
 
   void _randomizeDirection() {
     final random = Random();
-    velocity = (random.nextDouble() * 5) + 2; // entre 2 y 7
-    angleDeg = random.nextDouble() * 360;     // entre 0 y 360 grados
+    velocity = (random.nextDouble() * 5) + 2;
+    angleDeg = random.nextDouble() * 360;
   }
 
   @override
