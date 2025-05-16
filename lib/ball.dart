@@ -36,6 +36,11 @@ class _BallState extends State<Ball> {
   void initState() {
     xpos = widget.ballController.initPos.dx;
     ypos = widget.ballController.initPos.dy;
+
+    widget.ballController.bounce=(){
+      toRight=!toRight;
+      toBottom=!toBottom;
+    };
     widget.ballController.getPosition=(){
       return Offset(xpos, ypos);
     };

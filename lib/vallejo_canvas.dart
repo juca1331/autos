@@ -18,13 +18,13 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
     'red_ball':
         CanvasElementController(initPos: Offset(0, 0), codeName: 'red_ball'),
     'blue_ball':
-        CanvasElementController(initPos: Offset(0, 0), codeName: 'blue_ball'),
+        CanvasElementController(initPos: Offset(100, 0), codeName: 'blue_ball'),
     'green_car':
-        CanvasElementController(initPos: Offset(0, 0), codeName: 'green_car'),
+        CanvasElementController(initPos: Offset(0, 100), codeName: 'green_car'),
     'blue_car':
-        CanvasElementController(initPos: Offset(0, 0), codeName: 'blue_car'),
+        CanvasElementController(initPos: Offset(40, 0), codeName: 'blue_car'),
     'red_car':
-        CanvasElementController(initPos: Offset(0, 0), codeName: 'red_car'),
+        CanvasElementController(initPos: Offset(200, 0), codeName: 'red_car'),
   };
 
   
