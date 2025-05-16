@@ -12,11 +12,13 @@ class CanvasElementController {
   Function(double maxWidth, double maxHeight) drawNextFrame =
       (maxWidth, maxHeight) {};
 
-  Offset Function()getPosition=() {
+  Offset Function() getPosition = () {
     return Offset.zero;
   };
 
-  Size Function()getSize=() {
+  Size Function() getSize = () {
     return Size.zero;
   };
+
+  void Function() bounce = () {};
 }

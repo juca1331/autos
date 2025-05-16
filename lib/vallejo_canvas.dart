@@ -50,6 +50,8 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
 
         if (rectA.overlaps(rectB)) {
           print('🎯 Colisión detectada entre el elemento ${a.codeName} y ${b.codeName}');
+          a.bounce();
+          b.bounce();
           // Aquí puedes realizar alguna acción: detener movimiento, cambiar dirección, etc.
         }
       }

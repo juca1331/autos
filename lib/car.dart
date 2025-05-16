@@ -39,6 +39,11 @@ class _CarState extends State<Car> {
 
     _randomizeDirection();
 
+    widget.carController.bounce=(){
+      angleDeg=(angleDeg+180)%360;
+    };
+
+
     widget.carController.getPosition = () {
       return Offset(xpos, ypos);
     };
