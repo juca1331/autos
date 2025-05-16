@@ -14,21 +14,55 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
   double maxWidth = 0;
   double maxHeight = 0;
 
-  final ballController = CanvasElementController(initPos: Offset(0, 0), codeName: 'ball');
-  final ballController2 = CanvasElementController(initPos: Offset(0, 0), codeName: 'ball');
+  Map<String, CanvasElementController> controllers = {
+    'red_ball':
+        CanvasElementController(initPos: Offset(0, 0), codeName: 'red_ball'),
+    'blue_ball':
+        CanvasElementController(initPos: Offset(0, 0), codeName: 'blue_ball'),
+    'green_car':
+        CanvasElementController(initPos: Offset(0, 0), codeName: 'green_car'),
+    'blue_car':
+        CanvasElementController(initPos: Offset(0, 0), codeName: 'blue_car'),
+    'red_car':
+        CanvasElementController(initPos: Offset(0, 0), codeName: 'red_car'),
+  };
 
-  final carController = CanvasElementController(initPos: Offset(100, 100), codeName: 'green_car');
-  final carController2 = CanvasElementController(initPos: Offset(200, 150), codeName: 'blue_car');
-  final carController3 = CanvasElementController(initPos: Offset(300, 200), codeName: 'red_car');
+  
+  void detectCollisions(List<CanvasElementController> controllers) {
+    for (int i = 0; i < controllers.length; i++) {
+      for (int j = i + 1; j < controllers.length; j++) {
+        final a = controllers[i];
+        final b = controllers[j];
+
+        final rectA = Rect.fromLTWH(
+          a.getPosition().dx,
+          a.getPosition().dy,
+          a.getSize().width,
+          a.getSize().height,
+        );
+
+        final rectB = Rect.fromLTWH(
+          b.getPosition().dx,
+          b.getPosition().dy,
+          b.getSize().width,
+          b.getSize().height,
+        );
+
+        if (rectA.overlaps(rectB)) {
+          print('🎯 Colisión detectada entre el elemento ${a.codeName} y ${b.codeName}');
+          // Aquí puedes realizar alguna acción: detener movimiento, cambiar dirección, etc.
+        }
+      }
+    }
+  }
 
   Future<void> startLoop() async {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 20));
-      ballController.drawNextFrame(maxWidth, maxHeight);
-      ballController2.drawNextFrame(maxWidth, maxHeight);
-      carController.drawNextFrame(maxWidth, maxHeight);
-      carController2.drawNextFrame(maxWidth, maxHeight);
-      carController3.drawNextFrame(maxWidth, maxHeight);
+      for (var element in controllers.values) {
+        element.drawNextFrame(maxWidth,maxHeight);
+      }
+      detectCollisions(controllers.values.toList());
     }
   }
 
@@ -47,17 +81,26 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
       return Stack(
         children: [
           Ball(
-            ballController: ballController,
+            ballController: controllers['red_ball']!,
             color: Colors.red,
           ),
           Ball(
-            ballController: ballController2,
+            ballController: controllers ['blue_ball']!,
             color: Colors.blue,
             size: 40,
           ),
-          Car(carController: carController, color: Colors.green, codeName: 'verde'),
-          Car(carController: carController2, color: Colors.blue, codeName: 'azul'),
-          Car(carController: carController3, color: Colors.red, codeName: 'rojo'),
+          Car(
+              carController: controllers['green_car']!,
+              color: Colors.green,
+              codeName: 'verde'),
+          Car(
+              carController: controllers['blue_car']!,
+              color: Colors.blue,
+              codeName: 'azul'),
+          Car(
+              carController: controllers['red_car']!,
+              color: Colors.red,
+              codeName: 'rojo'),
         ],
       );
     });
