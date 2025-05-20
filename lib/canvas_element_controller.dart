@@ -20,5 +20,5 @@ class CanvasElementController {
     return Size.zero;
   };
 
-  void Function() bounce = () {};
+  void Function(CanvasElementController controller) bounce = (_) {};
 }

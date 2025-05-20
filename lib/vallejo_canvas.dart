@@ -16,7 +16,7 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
 
   Map<String, CanvasElementController> controllers = {
     'red_ball':
-        CanvasElementController(initPos: Offset(0, 0), codeName: 'red_ball'),
+        CanvasElementController(initPos: Offset(300, 300), codeName: 'red_ball'),
     'blue_ball':
         CanvasElementController(initPos: Offset(100, 0), codeName: 'blue_ball'),
     'green_car':
@@ -50,8 +50,8 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
 
         if (rectA.overlaps(rectB)) {
           print('🎯 Colisión detectada entre el elemento ${a.codeName} y ${b.codeName}');
-          a.bounce();
-          b.bounce();
+          a.bounce(b);
+          b.bounce(a);
           // Aquí puedes realizar alguna acción: detener movimiento, cambiar dirección, etc.
         }
       }

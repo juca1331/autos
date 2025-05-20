@@ -18,4 +18,3 @@ class MainApp extends StatelessWidget {
   }
 }
 
-//deifinir metodo bounce en la pelota

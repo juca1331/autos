@@ -37,7 +37,7 @@ class _BallState extends State<Ball> {
     xpos = widget.ballController.initPos.dx;
     ypos = widget.ballController.initPos.dy;
 
-    widget.ballController.bounce=(){
+    widget.ballController.bounce=(controller){
       toRight=!toRight;
       toBottom=!toBottom;
     };
@@ -97,11 +97,16 @@ class _BallState extends State<Ball> {
       top: ypos,
       left: xpos,
       child: Container(
-        width: widget.size,
-        height: widget.size,
         decoration: BoxDecoration(
-          color: widget.color,
-          borderRadius: BorderRadius.circular(25),
+          border: Border.all(color: widget.color)
+        ),
+        child: Container(
+          width: widget.size,
+          height: widget.size,
+          decoration: BoxDecoration(
+            color: widget.color,
+            borderRadius: BorderRadius.circular(25),
+          ),
         ),
       ),
     );

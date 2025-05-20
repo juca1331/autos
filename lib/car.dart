@@ -30,6 +30,10 @@ class _CarState extends State<Car> {
 
   int pathFrames = 0;
 
+  int pathSize = 50;
+
+  bool isOn = true;
+
   @override
   void initState() {
     super.initState();
@@ -39,10 +43,16 @@ class _CarState extends State<Car> {
 
     _randomizeDirection();
 
-    widget.carController.bounce=(){
-      angleDeg=(angleDeg+180)%360;
+    widget.carController.bounce = (controller) {
+      if (controller.codeName == 'red_ball' ||
+          controller.codeName.contains('car')) {
+        setState(() {
+          isOn = false;
+        });
+      } else {
+        angleDeg = (angleDeg + 180) % 360;
+      }
     };
-
 
     widget.carController.getPosition = () {
       return Offset(xpos, ypos);
@@ -53,50 +63,55 @@ class _CarState extends State<Car> {
     };
 
     widget.carController.drawNextFrame = (maxWidth, maxHeight) {
-      setState(() {
-        pathFrames++;
-        if (pathFrames >= 50) {
-          pathFrames = 0;
-          _randomizeDirection();
-        }
+      if (isOn) {
+        setState(() {
+          pathFrames++;
+          if (pathFrames >= pathSize) {
+            pathFrames = 0;
 
-        double radians = angleDeg * (pi / 180);
-        xpos += cos(radians) * velocity;
-        ypos += sin(radians) * velocity;
+            _randomizeDirection();
+          }
 
-        bool rebounded = false;
+          double radians = angleDeg * (pi / 180);
+          xpos += cos(radians) * velocity;
+          ypos += sin(radians) * velocity;
 
-        if (xpos + widget.size > maxWidth) {
-          xpos = maxWidth - widget.size;
-          angleDeg = 180 - angleDeg;
-          rebounded = true;
-        } else if (xpos < 0) {
-          xpos = 0;
-          angleDeg = 180 - angleDeg;
-          rebounded = true;
-        }
+          bool rebounded = false;
 
-        if (ypos + widget.size > maxHeight) {
-          ypos = maxHeight - widget.size;
-          angleDeg = -angleDeg;
-          rebounded = true;
-        } else if (ypos < 0) {
-          ypos = 0;
-          angleDeg = -angleDeg;
-          rebounded = true;
-        }
+          if (xpos + widget.size > maxWidth) {
+            xpos = maxWidth - widget.size;
+            angleDeg = 180 - angleDeg;
+            rebounded = true;
+          } else if (xpos < 0) {
+            xpos = 0;
+            angleDeg = 180 - angleDeg;
+            rebounded = true;
+          }
 
-        if (rebounded) {
-          angleDeg %= 360;
-        }
-      });
+          if (ypos + widget.size > maxHeight) {
+            ypos = maxHeight - widget.size;
+            angleDeg = -angleDeg;
+            rebounded = true;
+          } else if (ypos < 0) {
+            ypos = 0;
+            angleDeg = -angleDeg;
+            rebounded = true;
+          }
+
+          if (rebounded) {
+            angleDeg %= 360;
+          }
+        });
+      }
     };
   }
 
   void _randomizeDirection() {
     final random = Random();
+
     velocity = (random.nextDouble() * 5) + 2;
     angleDeg = random.nextDouble() * 360;
+    pathSize = random.nextInt(70) + 30;
   }
 
   @override
@@ -104,14 +119,22 @@ class _CarState extends State<Car> {
     return Positioned(
       top: ypos,
       left: xpos,
-      child: SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: Transform.rotate(
-          angle: angleDeg * pi / 180,
-          child: SvgPicture.asset(
-            'assets/car.svg',
-            colorFilter: ColorFilter.mode(widget.color, BlendMode.srcIn),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            isOn = !isOn;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(border: Border.all(color: widget.color)),
+          width: widget.size,
+          height: widget.size,
+          child: Transform.rotate(
+            angle: angleDeg * pi / 180,
+            child: SvgPicture.asset(
+              'assets/car.svg',
+              colorFilter: ColorFilter.mode(widget.color, BlendMode.srcIn),
+            ),
           ),
         ),
       ),
