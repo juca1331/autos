@@ -47,7 +47,7 @@ class _BallState extends State<Ball> {
     widget.ballController.getSize=(){
       return Size(widget.size, widget.size);
     };
-    widget.ballController.drawNextFrame = (maxWidth, maxHeight) {
+    widget.ballController.drawNextFrame = (maxWidth, maxHeight,force) {
       setState(() {
         pathFrames++;
         if (pathFrames >= widget.size) {

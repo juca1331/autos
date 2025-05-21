@@ -34,6 +34,8 @@ class _CarState extends State<Car> {
 
   bool isOn = true;
 
+  int gasPercentage = 100;
+
   @override
   void initState() {
     super.initState();
@@ -47,11 +49,14 @@ class _CarState extends State<Car> {
       if (controller.codeName == 'red_ball' ||
           controller.codeName.contains('car')) {
         setState(() {
-          isOn = false;
+          //  isOn = false;
         });
-      } else {
-        angleDeg = (angleDeg + 180) % 360;
+      } else if (controller.codeName == 'blue_ball') {
+        setState(() {
+          isOn = true;
+        });
       }
+      angleDeg = (angleDeg + 180) % 360;
     };
 
     widget.carController.getPosition = () {
@@ -62,8 +67,8 @@ class _CarState extends State<Car> {
       return Size(widget.size, widget.size);
     };
 
-    widget.carController.drawNextFrame = (maxWidth, maxHeight) {
-      if (isOn) {
+    widget.carController.drawNextFrame = (maxWidth, maxHeight, force) {
+      if (isOn || force) {
         setState(() {
           pathFrames++;
           if (pathFrames >= pathSize) {
@@ -125,17 +130,37 @@ class _CarState extends State<Car> {
             isOn = !isOn;
           });
         },
-        child: Container(
-          decoration: BoxDecoration(border: Border.all(color: widget.color)),
-          width: widget.size,
-          height: widget.size,
-          child: Transform.rotate(
-            angle: angleDeg * pi / 180,
-            child: SvgPicture.asset(
-              'assets/car.svg',
-              colorFilter: ColorFilter.mode(widget.color, BlendMode.srcIn),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration:
+                  BoxDecoration(border: Border.all(color: widget.color)),
+              width: widget.size,
+              height: widget.size,
+              child: Transform.rotate(
+                angle: angleDeg * pi / 180,
+                child: SvgPicture.asset(
+                  'assets/car.svg',
+                  colorFilter: ColorFilter.mode(widget.color, BlendMode.srcIn),
+                ),
+              ),
             ),
-          ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '%$gasPercentage',
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 10,
+                    color: widget.color,
+                  ),
+                )
+              ],
+            )
+          ],
         ),
       ),
     );

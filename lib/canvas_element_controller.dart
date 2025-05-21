@@ -9,8 +9,8 @@ class CanvasElementController {
   final Offset initPos;
   final String codeName;
 
-  Function(double maxWidth, double maxHeight) drawNextFrame =
-      (maxWidth, maxHeight) {};
+  Function(double maxWidth, double maxHeight,bool force) drawNextFrame =
+      (maxWidth, maxHeight,force) {};
 
   Offset Function() getPosition = () {
     return Offset.zero;

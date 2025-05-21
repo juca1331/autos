@@ -15,10 +15,10 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
   double maxHeight = 0;
 
   Map<String, CanvasElementController> controllers = {
-    'red_ball':
+   /* 'red_ball':
         CanvasElementController(initPos: Offset(300, 300), codeName: 'red_ball'),
     'blue_ball':
-        CanvasElementController(initPos: Offset(100, 0), codeName: 'blue_ball'),
+        CanvasElementController(initPos: Offset(100, 0), codeName: 'blue_ball'),*/
     'green_car':
         CanvasElementController(initPos: Offset(0, 100), codeName: 'green_car'),
     'blue_car':
@@ -52,6 +52,11 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
           print('🎯 Colisión detectada entre el elemento ${a.codeName} y ${b.codeName}');
           a.bounce(b);
           b.bounce(a);
+          for (var i = 0; i < 2; i++) {
+            a.drawNextFrame(maxWidth,maxHeight,true);
+            b.drawNextFrame(maxWidth,maxHeight,true);
+          }
+          
           // Aquí puedes realizar alguna acción: detener movimiento, cambiar dirección, etc.
         }
       }
@@ -62,7 +67,7 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 20));
       for (var element in controllers.values) {
-        element.drawNextFrame(maxWidth,maxHeight);
+        element.drawNextFrame(maxWidth,maxHeight,false);
       }
       detectCollisions(controllers.values.toList());
     }
@@ -82,7 +87,7 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
 
       return Stack(
         children: [
-          Ball(
+          /*Ball(
             ballController: controllers['red_ball']!,
             color: Colors.red,
           ),
@@ -90,7 +95,7 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
             ballController: controllers ['blue_ball']!,
             color: Colors.blue,
             size: 40,
-          ),
+          ),*/
           Car(
               carController: controllers['green_car']!,
               color: Colors.green,
