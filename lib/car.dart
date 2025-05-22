@@ -34,7 +34,7 @@ class _CarState extends State<Car> {
 
   bool isOn = true;
 
-  int gasPercentage = 100;
+  double gasPercentage = 100;
 
   @override
   void initState() {
@@ -71,6 +71,12 @@ class _CarState extends State<Car> {
       if (isOn || force) {
         setState(() {
           pathFrames++;
+          if(gasPercentage>0.0){
+            gasPercentage = max(0, gasPercentage - 0.1);
+          }else{
+            isOn=false;
+          }
+          
           if (pathFrames >= pathSize) {
             pathFrames = 0;
 
@@ -151,7 +157,7 @@ class _CarState extends State<Car> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '%$gasPercentage',
+                  '%${gasPercentage.toStringAsFixed(2)}',
                   style: TextStyle(
                     decoration: TextDecoration.none,
                     fontSize: 10,
@@ -159,7 +165,7 @@ class _CarState extends State<Car> {
                   ),
                 )
               ],
-            )
+            ),
           ],
         ),
       ),
