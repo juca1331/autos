@@ -17,6 +17,5 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-// manana 3:30
-//tarea: hacer que la gasolina baje 
+// agregar taller 
 

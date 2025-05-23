@@ -7,14 +7,15 @@ class Car extends StatefulWidget {
   const Car({
     super.key,
     required this.carController,
+    required this.gasController,
     required this.color,
-    required this.codeName, // parámetro obligatorio agregado
     this.size = 30,
   });
 
   final CanvasElementController carController;
+  final CanvasElementController gasController;
   final Color color;
-  final String codeName; // nuevo parámetro
+
   final double size;
 
   @override
@@ -36,6 +37,8 @@ class _CarState extends State<Car> {
 
   double gasPercentage = 100;
 
+  double gasLimit = 40;
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +58,8 @@ class _CarState extends State<Car> {
         setState(() {
           isOn = true;
         });
+      } else if (controller.codeName == 'gas_station') {
+        gasPercentage = 100;
       }
       angleDeg = (angleDeg + 180) % 360;
     };
@@ -71,12 +76,12 @@ class _CarState extends State<Car> {
       if (isOn || force) {
         setState(() {
           pathFrames++;
-          if(gasPercentage>0.0){
+          if (gasPercentage > 0.0) {
             gasPercentage = max(0, gasPercentage - 0.1);
-          }else{
-            isOn=false;
+          } else {
+            isOn = false;
           }
-          
+
           if (pathFrames >= pathSize) {
             pathFrames = 0;
 
@@ -117,12 +122,26 @@ class _CarState extends State<Car> {
     };
   }
 
+  double angleBetweenOffsets(Offset a, Offset b) {
+    final delta = b - a;
+    final radians = atan2(delta.dy, delta.dx);
+    return radians * 180 / pi;
+  }
+
   void _randomizeDirection() {
     final random = Random();
 
     velocity = (random.nextDouble() * 5) + 2;
-    angleDeg = random.nextDouble() * 360;
     pathSize = random.nextInt(70) + 30;
+
+    if (gasPercentage < gasLimit) {
+      angleDeg = angleBetweenOffsets(
+        Offset(xpos, ypos),
+        widget.gasController.getPosition(),
+      );
+    } else {
+      angleDeg = random.nextDouble() * 360;
+    }
   }
 
   @override

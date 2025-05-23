@@ -1,7 +1,9 @@
 import 'package:cars_simulation/ball.dart';
 import 'package:cars_simulation/canvas_element_controller.dart';
 import 'package:cars_simulation/car.dart';
+import 'package:cars_simulation/gas_station.dart';
 import 'package:flutter/material.dart';
+import 'package:zoom_widget/zoom_widget.dart';
 
 class VallejoCanvas extends StatefulWidget {
   const VallejoCanvas({super.key});
@@ -11,11 +13,11 @@ class VallejoCanvas extends StatefulWidget {
 }
 
 class _VallejoCanvasState extends State<VallejoCanvas> {
-  double maxWidth = 0;
-  double maxHeight = 0;
+  double maxWidth = 700;
+  double maxHeight = 700;
 
   Map<String, CanvasElementController> controllers = {
-   /* 'red_ball':
+    /* 'red_ball':
         CanvasElementController(initPos: Offset(300, 300), codeName: 'red_ball'),
     'blue_ball':
         CanvasElementController(initPos: Offset(100, 0), codeName: 'blue_ball'),*/
@@ -25,9 +27,11 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
         CanvasElementController(initPos: Offset(40, 0), codeName: 'blue_car'),
     'red_car':
         CanvasElementController(initPos: Offset(200, 0), codeName: 'red_car'),
+    'gas_station': CanvasElementController(
+        initPos: Offset(double.infinity, double.infinity),
+        codeName: 'gas_station')
   };
 
-  
   void detectCollisions(List<CanvasElementController> controllers) {
     for (int i = 0; i < controllers.length; i++) {
       for (int j = i + 1; j < controllers.length; j++) {
@@ -49,14 +53,15 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
         );
 
         if (rectA.overlaps(rectB)) {
-          print('🎯 Colisión detectada entre el elemento ${a.codeName} y ${b.codeName}');
+          print(
+              '🎯 Colisión detectada entre el elemento ${a.codeName} y ${b.codeName}');
           a.bounce(b);
           b.bounce(a);
           for (var i = 0; i < 2; i++) {
-            a.drawNextFrame(maxWidth,maxHeight,true);
-            b.drawNextFrame(maxWidth,maxHeight,true);
+            a.drawNextFrame(maxWidth, maxHeight, true);
+            b.drawNextFrame(maxWidth, maxHeight, true);
           }
-          
+
           // Aquí puedes realizar alguna acción: detener movimiento, cambiar dirección, etc.
         }
       }
@@ -67,7 +72,7 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 20));
       for (var element in controllers.values) {
-        element.drawNextFrame(maxWidth,maxHeight,false);
+        element.drawNextFrame(maxWidth, maxHeight, false);
       }
       detectCollisions(controllers.values.toList());
     }
@@ -81,35 +86,38 @@ class _VallejoCanvasState extends State<VallejoCanvas> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      maxHeight = constraints.maxHeight;
-      maxWidth = constraints.maxWidth;
-
-      return Stack(
+    return Zoom(
+      maxZoomWidth: maxWidth,
+      maxZoomHeight: maxHeight,
+      child: Stack(
         children: [
           /*Ball(
-            ballController: controllers['red_ball']!,
+              ballController: controllers['red_ball']!,
+              color: Colors.red,
+            ),
+            Ball(
+              ballController: controllers ['blue_ball']!,
+              color: Colors.blue,
+              size: 40,
+            ),*/
+          Car(
+            carController: controllers['green_car']!,
+            gasController: controllers['gas_station']!,
+            color: Colors.green,
+          ),
+          Car(
+            carController: controllers['blue_car']!,
+            gasController: controllers['gas_station']!,
+            color: Colors.blue,
+          ),
+          Car(
+            carController: controllers['red_car']!,
+            gasController: controllers['gas_station']!,
             color: Colors.red,
           ),
-          Ball(
-            ballController: controllers ['blue_ball']!,
-            color: Colors.blue,
-            size: 40,
-          ),*/
-          Car(
-              carController: controllers['green_car']!,
-              color: Colors.green,
-              codeName: 'verde'),
-          Car(
-              carController: controllers['blue_car']!,
-              color: Colors.blue,
-              codeName: 'azul'),
-          Car(
-              carController: controllers['red_car']!,
-              color: Colors.red,
-              codeName: 'rojo'),
+          GasStation(controller: controllers['gas_station']!),
         ],
-      );
-    });
+      ),
+    );
   }
 }
